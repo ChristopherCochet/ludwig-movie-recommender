@@ -3,3 +3,5 @@ click
 pylint
 pytest-cov
 ludwig
+ray
+dask

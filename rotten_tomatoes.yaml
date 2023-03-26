@@ -1,0 +1,40 @@
+input_features:
+    - name: genres
+      type: set
+      preprocessing:
+          tokenizer: comma
+    - name: content_rating
+      type: category
+    - name: top_critic
+      type: binary
+    - name: runtime
+      type: number
+    - name: review_content
+      type: text
+      encoder: 
+          type: embed
+output_features:
+    - name: recommended
+      type: binary
+trainer:
+    batch_size: 128
+hyperopt:
+  goal: maximize
+  output_feature: recommended
+  metric: accuracy
+  split: validation
+  parameters:
+    training.learning_rate:
+      space: loguniform
+      lower: 0.0001
+      upper: 0.1
+    training.optimizer.type:
+      space: choice
+      categories: [sgd, adam, adagrad]
+    review_content.embedding_size:
+      space: choice
+      categories: [128, 256]
+  search_alg:
+    type: variant_generator
+  executor:
+    num_samples: 10    
